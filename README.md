@@ -39,7 +39,7 @@ Prerequisites
 
 Download
 ========
-For download see https://github.com/znuny/Znuny4OTRS-PasswordPolicy/tree/master/build
+For download see https://github.com/downloads/znuny/Znuny4OTRS-PasswordPolicy/Znuny4OTRS-PasswordPolicy-1.2.2.opm
 
 Commercial Support
 ==================
