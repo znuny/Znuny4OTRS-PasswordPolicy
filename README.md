@@ -1,3 +1,5 @@
+![Znuny logo](http://znuny.com/assets/logo_small.png)
+
 Password Policy
 ===============
 "Password Policy" is a generic extension which works well together with all extensions provided by OTRS AG. A SysConfig setting allows you to configure "Password Policy" (see more in the configuration options).
@@ -6,8 +8,8 @@ This extension is useful if strong password policies are needed, e. g. in CERT o
 
 <img src="Znuny4OTRS-PasswordPolicy/raw/master/screenshots/passwordpolicy.png" />
 
-Feature List
-============
+**Feature List**
+
 * Enforce a password renewal after X (configurable) days.
 * Password-History to use the password X (configurable) times not to use again.
 * Disable account after x invalid login attempts.
@@ -16,8 +18,27 @@ Feature List
 * At least 2 letters in a password.
 * At least one number in a password.
 
-Configuration
-=============
+
+**Installation**
+
+Download the package and install it via admin interface -> package manager or use Znuny4OTRS-Repo.
+
+
+**Prerequisites**
+
+- Znuny4OTRS-Repo
+
+- OTRS 3.0
+
+- OTRS 3.1
+
+- OTRS 3.2
+
+- OTRS 3.3
+
+
+**Configuration**
+
 Via SysConfig-Settings (Admin -> SysConfig -> Group "Framework::Password::Policy", Sub-Group "Frontend::Agent::Password").
 
 * PasswordMaxValidTimeInDays (max. valid days of a password)
@@ -29,25 +50,17 @@ Via SysConfig-Settings (Admin -> SysConfig -> Group "Framework::Password::Policy
 * PasswordRegExp (Regular Expression to enhance the password policy)
 * PasswordHistory (already used passwords can not be used again)
 
-Installation
-============
-Download the package and install it via admin interface -> package manager.
+**Download**
 
-Prerequisites
-* OTRS 3.0
-* OTRS 3.1
-* OTRS 3.2
+For download see [http://znuny.com/en/#!/addons](http://znuny.com/en/#!/addons)
 
-Download
-========
-For download see http://znuny.com/d/
+**Commercial Support**
 
-Commercial Support
-==================
-For this extention and for OTRS in gerneral visit http://znuny.com. Looking forward to hear from you!
+For this extension and for OTRS in general visit [http://znuny.com](http://znuny.com). Looking forward to hear from you!
 
 Enjoy!
 
  Your Znuny Team!
- http://znuny.com
+
+ [http://znuny.com](http://znuny.com)
 
