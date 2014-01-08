@@ -22,6 +22,7 @@ sub Data {
     $Self->{Translation}->{'Password required min. 1 digit.'} = 'Passwort benötigt min. 1 Zahl.';
     $Self->{Translation}->{'Change Config Options'} = 'Ändern der Konfigurations-Einstellungen';
     $Self->{Translation}->{'Admin Permissions are required!'} = 'Admin-Berechtigung nötig!';
+    $Self->{Translation}->{'New password again'} = 'Neues Passwort wiederholen';
 }
 
 1;
