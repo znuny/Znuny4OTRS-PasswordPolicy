@@ -23,6 +23,7 @@ sub Data {
     $Self->{Translation}->{'Change Config Options'} = 'Ändern der Konfigurations-Einstellungen';
     $Self->{Translation}->{'Admin Permissions are required!'} = 'Admin-Berechtigung nötig!';
     $Self->{Translation}->{'New password again'} = 'Neues Passwort wiederholen';
+    $Self->{Translation}->{'Defines the config parameters of this item, to be shown in the preferences view.'} = 'Diese Konfiguration definiert die Konfigurationsparameter, die in der Einstellungsansicht angezeigt werden sollen.';
 }
 
 1;
