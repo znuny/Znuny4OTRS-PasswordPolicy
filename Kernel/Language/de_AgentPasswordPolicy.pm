@@ -24,6 +24,15 @@ sub Data {
     $Self->{Translation}->{'Admin Permissions are required!'} = 'Admin-Berechtigung nötig!';
     $Self->{Translation}->{'New password again'} = 'Neues Passwort wiederholen';
     $Self->{Translation}->{'Defines the config parameters of this item, to be shown in the preferences view.'} = 'Diese Konfiguration definiert die Konfigurationsparameter, die in der Einstellungsansicht angezeigt werden sollen.';
+    $Self->{Translation}->{"Can't update password, your new passwords do not match! Please try again!"} = "Passwort konnte nicht aktualisiert werden, die eingegebenen Passwörter stimmen nicht überein!";
+    $Self->{Translation}->{"Please supply your new password!"} = "Bitte neues Passwort eingeben!";
+    $Self->{Translation}->{"Can't update password, invalid characters!"} = "Passwort konnte nicht aktualisiert werden, es enthält ungültige Zeichen!";
+    $Self->{Translation}->{"Can't update password, must be at least %s characters!"} = "Passwort konnte nicht aktualisiert werden, eine minimale Länge von %s Zeichen wird benötigt!";
+    $Self->{Translation}->{"Can't update password, must contain 2 lower and 2 upper characters!"} = "Passwort konnte nicht aktualisiert werden, min. 2 Klein- und 2 Großbuchstaben werden benötigt!";
+    $Self->{Translation}->{"Can't update password, needs at least 1 digit!"} = "Passwort konnte nicht aktualisiert werden, min. eine Zahl wird benötigt!";
+    $Self->{Translation}->{"Can't update password, needs at least 2 characters!"} = "Passwort konnte nicht aktualisiert werden, min. 2 Buchstaben (keine Zahlen) benötigt!";
+    $Self->{Translation}->{"Can't update password, this password has already been used. Please choose a new one!"} = "Passwort konnte nicht aktualisiert werden, da es bereits benutzt wurde. Bitte wählen sie ein anderes.";
+    $Self->{Translation}->{"Preferences updated successfully!"} = "Einstellungen erfolgreich aktualisiert!";
 }
 
 1;
