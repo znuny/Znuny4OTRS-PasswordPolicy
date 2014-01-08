@@ -1,63 +1,53 @@
-![Znuny logo](http://znuny.com/assets/logo_small.png) 
+Password Policy
+===============
+"Password Policy" is a generic extension which works well together with all extensions provided by OTRS AG. A SysConfig setting allows you to configure "Password Policy" (see more in the configuration options).
 
-Google Maps Integration
-=======================
-With the Google Maps integration you will be able to see all customers on a map (customers with open tickets are marked in an extra color). The map is available in Dashboard and also as an own dedicated one large page map (just click on “more” in dashboard).
+This extension is useful if strong password policies are needed, e. g. in CERT or financial environments.
 
-<img src="https://raw.github.com/znuny/Znuny4OTRS-CustomerMap/master/screenshots/customermap.png" />
+<img src="Znuny4OTRS-PasswordPolicy/raw/master/screenshots/passwordpolicy.png" />
 
-**Installation**
+Feature List
+============
+* Enforce a password renewal after X (configurable) days.
+* Password-History to use the password X (configurable) times not to use again.
+* Disable account after x invalid login attempts.
+* Minimum size of the password.
+* At least 2 small and 2 big letters in a password.
+* At least 2 letters in a password.
+* At least one number in a password.
 
-Download the package and install it via admin interface -> package manager or use Znuny4OTRS-Repo.
+Configuration
+=============
+Via SysConfig-Settings (Admin -> SysConfig -> Group "Framework::Password::Policy", Sub-Group "Frontend::Agent::Password").
 
+* PasswordMaxValidTimeInDays (max. valid days of a password)
+* PasswordNeedDigit (at least 1 digit is required)
+* PasswordMaxLoginFailed (count of invalid login attempts)
+* PasswordMin2Characters (at least 2 characters are required)
+* PasswordMin2Lower2UpperCharacters (at least 2 upper and 2 lower characters are required)
+* PasswordMinSize (min. length of a password)
+* PasswordRegExp (Regular Expression to enhance the password policy)
+* PasswordHistory (already used passwords can not be used again)
 
-**Prerequisites**
+Installation
+============
+Download the package and install it via admin interface -> package manager.
 
-- Znuny4OTRS-Repo
+Prerequisites
+* OTRS 3.0
+* OTRS 3.1
+* OTRS 3.2
 
-- OTRS 3.0
+Download
+========
+For download see http://znuny.com/d/
 
-- OTRS 3.1
-
-- OTRS 3.2
-
-
-**Configuration**
-
-You need to have customer sources with the following attributes for the extension to work
-UserStreet
-
-UserCity
-
-UserCountry
-
-configured in your CustomerUserMap (just take a look in your Kernel/Config.pm to check out if you use them).
-
-**Build geo location data of your customer records**
-
-Just execute the following cmd program to build your geo location database. You may also do this by using var/cron/customermap cron job to build it automatically.
-
-    shell> bin/otrs.GMapsCustomerBuild.pl
-    NOTICE: Done (wrote 209 records).
-    shell>
-
-**Check if it is working**
-
-Go to the dashboard, activate the widget “Customer Map” and check if you see your customers on the map. 
-
-Enjoy the inspiration how to use this new kind of view (e. g. for optimizing your travel routes). 
-
-**Download**
-
-For download see [http://znuny.com/d/](http://znuny.com/d/)
-
-**Commercial Support**
-
-For this extension and for OTRS in general visit [http://znuny.com](http://znuny.com). Looking forward to hear from you!
+Commercial Support
+==================
+For this extention and for OTRS in gerneral visit http://znuny.com. Looking forward to hear from you!
 
 Enjoy!
 
  Your Znuny Team!
-
- [http://znuny.com](http://znuny.com)
+ http://znuny.com
 
