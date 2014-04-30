@@ -32,6 +32,10 @@ sub PreRun {
         $Self->{RequestedURL} = 'Action=';
     }
 
+    my $Action = $Self->{ParamObject}->GetParam( GetParam => 'Action' );
+
+    return if $Action && $Action eq 'AgentInfo';
+
     # return if password max time is not configured
     my $Config = $Self->{ConfigObject}->Get('PreferencesGroups');
     return if !$Config;
