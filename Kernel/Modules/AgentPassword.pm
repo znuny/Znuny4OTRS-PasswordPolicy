@@ -32,9 +32,9 @@ sub PreRun {
         $Self->{RequestedURL} = 'Action=';
     }
 
-    my $Action = $Self->{ParamObject}->GetParam( GetParam => 'Action' );
-
-    return if $Action && $Action eq 'AgentInfo';
+    # cancel password action if an AgentInfo should be shown
+    # to prevent enless redirect loop
+    return if $Self->{Action} && $Self->{Action} eq 'AgentInfo';
 
     # return if password max time is not configured
     my $Config = $Self->{ConfigObject}->Get('PreferencesGroups');
