@@ -6,7 +6,7 @@ Password Policy
 
 This extension is useful if strong password policies are needed, e. g. in CERT or financial environments.
 
-<img src="Znuny4OTRS-PasswordPolicy/raw/master/screenshots/passwordpolicy.png" />
+![Screenshot SysConfig](https://github.com/znuny/Znuny4OTRS-PasswordPolicy/blob/master/screenshots/passwordpolicy.png)
 
 **Feature List**
 
