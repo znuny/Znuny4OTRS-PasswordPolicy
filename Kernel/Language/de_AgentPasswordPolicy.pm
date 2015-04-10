@@ -8,6 +8,7 @@ package Kernel::Language::de_AgentPasswordPolicy;
 use strict;
 use warnings;
 
+use utf8;
 
 sub Data {
     my $Self = shift;
