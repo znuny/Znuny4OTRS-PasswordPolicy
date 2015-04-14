@@ -2,6 +2,10 @@
 # Kernel/Language/de_AgentPasswordPolicy.pm - translation file
 # Copyright (C) 2014 Znuny GmbH, http://znuny.com/
 # --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
 
 package Kernel::Language::de_AgentPasswordPolicy;
 
@@ -12,6 +16,9 @@ use utf8;
 
 sub Data {
     my $Self = shift;
+
+    # SysConfig
+    $Self->{Translation}->{'This module is used to extend password policy.'} = 'Mit Hilfe dieses Moduls kann die Passwort-Policy verbessert werden.';
 
     $Self->{Translation}->{'Password Policy'} = 'Passwort-Richtlinien';
     $Self->{Translation}->{'Your current password is older then %s days. You need to set a new one.'} = 'Ihr aktuelles Passwort ist älter als %s Tage. Sie müssen ein neues setzen.';

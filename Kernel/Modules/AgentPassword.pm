@@ -1,6 +1,10 @@
 # --
 # Kernel/Modules/AgentPassword.pm - to restrict password policy
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2015 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Modules::AgentPassword;
@@ -53,9 +57,8 @@ sub PreRun {
     return if $Module =~ /(LDAP|HTTPBasicAuth|Radius)/i;
 
     # redirect if password change time is in scope
-    my $PasswordMaxValidTimeInDays
-        = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
-    my $PasswordMaxValidTill = $Self->{TimeObject}->SystemTime() - $PasswordMaxValidTimeInDays;
+    my $PasswordMaxValidTimeInDays = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
+    my $PasswordMaxValidTill       = $Self->{TimeObject}->SystemTime() - $PasswordMaxValidTimeInDays;
 
     # ignore pre application module if it is calling self
     return if $Self->{Action} =~ /^(AgentPassword|AdminPackage|AdminSysConfig)/;
@@ -158,8 +161,9 @@ sub _Screen {
     # show policy
     my @Policy
         = qw(PasswordHistory PasswordMinSize PasswordMin2Lower2UpperCharacters PasswordMin2Characters PasswordNeedDigit PasswordMaxValidTimeInDays);
+    POLICY:
     for my $Block (@Policy) {
-        next if !$Config->{Password}->{$Block};
+        next POLICY if !$Config->{Password}->{$Block};
         $Self->{LayoutObject}->Block(
             Name => $Block,
             Data => { %Param, %{ $Config->{Password} } },
@@ -167,7 +171,7 @@ sub _Screen {
     }
 
     # show sysconfig settings link if admin
-    if ($Self->{'UserIsGroup[admin]'}) {
+    if ( $Self->{'UserIsGroup[admin]'} ) {
         $Self->{LayoutObject}->Block(
             Name => 'AdminConfig',
             Data => { %Param, %{ $Config->{Password} } },
@@ -176,7 +180,7 @@ sub _Screen {
 
     $Output .= $Self->{LayoutObject}->Output(
         TemplateFile => 'AgentPassword',
-        Data => { %Param, %{ $Config->{Password} } },
+        Data         => { %Param, %{ $Config->{Password} } },
     );
 
     $Output .= $Self->{LayoutObject}->Footer();
