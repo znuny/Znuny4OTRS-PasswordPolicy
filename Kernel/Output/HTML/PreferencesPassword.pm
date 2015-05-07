@@ -236,6 +236,18 @@ sub Run {
 # ---
 # Znuny4OTRS-PasswordPolicy
 # ---
+    # set password change time
+    $Self->{UserObject}->SetPreferences(
+        UserID => $Param{UserData}->{UserID},
+        Key    => 'UserLastPwChangeTime',
+        Value  => $Self->{TimeObject}->SystemTime(),
+    );
+    $Self->{SessionObject}->UpdateSessionID(
+        SessionID => $Self->{SessionID},
+        Key    => 'UserLastPwChangeTime',
+        Value  => $Self->{TimeObject}->SystemTime(),
+    );
+
     # set password history
     $Self->{UserObject}->SetPreferences(
         UserID => $Param{UserData}->{UserID},

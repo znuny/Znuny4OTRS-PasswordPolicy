@@ -122,6 +122,7 @@ sub Run {
         # run password change
         my $Success = $Object->Run(
             GetParam => {
+                CurPw  => [ $Self->{ParamObject}->GetParam( Param => 'CurPw' ) ],
                 NewPw  => [ $Self->{ParamObject}->GetParam( Param => 'NewPw' ) ],
                 NewPw1 => [ $Self->{ParamObject}->GetParam( Param => 'NewPw1' ) ],
             },
