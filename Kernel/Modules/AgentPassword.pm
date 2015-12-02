@@ -1,5 +1,4 @@
 # --
-# Kernel/Modules/AgentPassword.pm - to restrict password policy
 # Copyright (C) 2012-2015 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -12,6 +11,16 @@ package Kernel::Modules::AgentPassword;
 use strict;
 use warnings;
 
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::Output::HTML::Layout',
+    'Kernel::System::AuthSession',
+    'Kernel::System::Main',
+    'Kernel::System::Time',
+    'Kernel::System::User',
+    'Kernel::System::Web::Request',
+);
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -19,12 +28,7 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # check needed objects
-    for (qw(ParamObject DBObject LayoutObject LogObject ConfigObject TimeObject)) {
-        if ( !$Self->{$_} ) {
-            $Self->{LayoutObject}->FatalError( Message => "Got no $_!" );
-        }
-    }
+    $Self->{UserObject} = $Kernel::OM->Get('Kernel::System::User');
 
     return $Self;
 }
@@ -41,16 +45,16 @@ sub PreRun {
     return if $Self->{Action} && $Self->{Action} eq 'AgentInfo';
 
     # return if password max time is not configured
-    my $Config = $Self->{ConfigObject}->Get('PreferencesGroups');
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('PreferencesGroups');
     return if !$Config;
     return if !$Config->{Password};
     return if !$Config->{Password}->{PasswordMaxValidTimeInDays};
 
     # check auth module
-    my $Module      = $Self->{ConfigObject}->Get('AuthModule');
+    my $Module      = $Kernel::OM->Get('Kernel::Config')->Get('AuthModule');
     my $AuthBackend = $Self->{UserAuthBackend};
     if ($AuthBackend) {
-        $Module = $Self->{ConfigObject}->Get( 'AuthModule' . $AuthBackend );
+        $Module = $Kernel::OM->Get('Kernel::Config')->Get( 'AuthModule' . $AuthBackend );
     }
 
     # return on no pw reset backends
@@ -58,7 +62,7 @@ sub PreRun {
 
     # redirect if password change time is in scope
     my $PasswordMaxValidTimeInDays = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
-    my $PasswordMaxValidTill       = $Self->{TimeObject}->SystemTime() - $PasswordMaxValidTimeInDays;
+    my $PasswordMaxValidTill = $Kernel::OM->Get('Kernel::System::Time')->SystemTime() - $PasswordMaxValidTimeInDays;
 
     # ignore pre application module if it is calling self
     return if $Self->{Action} =~ /^(AgentPassword|AdminPackage|AdminSysConfig)/;
@@ -67,12 +71,12 @@ sub PreRun {
     if ( !$Self->{UserLastPwChangeTime} || $Self->{UserLastPwChangeTime} < $PasswordMaxValidTill ) {
 
         # remember requested url
-        $Self->{SessionObject}->UpdateSessionID(
+        $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
             SessionID => $Self->{SessionID},
             Key       => 'UserRequestedURL',
             Value     => $Self->{RequestedURL},
         );
-        return $Self->{LayoutObject}->Redirect( OP => 'Action=AgentPassword' );
+        return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Redirect( OP => 'Action=AgentPassword' );
     }
     return;
 }
@@ -85,16 +89,16 @@ sub Run {
     }
 
     # check config
-    my $Config = $Self->{ConfigObject}->Get('PreferencesGroups');
-    $Self->{LayoutObject}->FatalError( Message => 'No Config Params available' ) if !$Config;
-    $Self->{LayoutObject}->FatalError( Message => 'No Config Params available' )
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('PreferencesGroups');
+    $Kernel::OM->Get('Kernel::Output::HTML::Layout')->FatalError( Message => 'No Config Params available' ) if !$Config;
+    $Kernel::OM->Get('Kernel::Output::HTML::Layout')->FatalError( Message => 'No Config Params available' )
         if !$Config->{Password};
 
     # check auth module
-    my $Module      = $Self->{ConfigObject}->Get('AuthModule');
+    my $Module      = $Kernel::OM->Get('Kernel::Config')->Get('AuthModule');
     my $AuthBackend = $Param{UserData}->{UserAuthBackend};
     if ($AuthBackend) {
-        $Module = $Self->{ConfigObject}->Get( 'AuthModule' . $AuthBackend );
+        $Module = $Kernel::OM->Get('Kernel::Config')->Get( 'AuthModule' . $AuthBackend );
     }
 
     # return on no pw reset backends
@@ -108,12 +112,12 @@ sub Run {
     if ( $Self->{Subaction} eq 'Change' ) {
 
         # load backend
-        if ( !$Self->{MainObject}->Require('Kernel::Output::HTML::PreferencesPassword') ) {
-            $Self->{LayoutObject}->FatalError();
+        if ( !$Kernel::OM->Get('Kernel::System::Main')->Require('Kernel::Output::HTML::Preferences::Password') ) {
+            $Kernel::OM->Get('Kernel::Output::HTML::Layout')->FatalError();
         }
 
-        # generate obejct
-        my $Object = Kernel::Output::HTML::PreferencesPassword->new(
+        # generate object
+        my $Object = Kernel::Output::HTML::Preferences::Password->new(
             %{$Self},
             ConfigItem => $Config->{Password},
             UserID     => $Self->{UserID},
@@ -122,9 +126,9 @@ sub Run {
         # run password change
         my $Success = $Object->Run(
             GetParam => {
-                CurPw  => [ $Self->{ParamObject}->GetParam( Param => 'CurPw' ) ],
-                NewPw  => [ $Self->{ParamObject}->GetParam( Param => 'NewPw' ) ],
-                NewPw1 => [ $Self->{ParamObject}->GetParam( Param => 'NewPw1' ) ],
+                CurPw  => [ $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'CurPw' ) ],
+                NewPw  => [ $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'NewPw' ) ],
+                NewPw1 => [ $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'NewPw1' ) ],
             },
             UserData => $Self,
         );
@@ -136,14 +140,14 @@ sub Run {
         }
 
         # remove requested url
-        $Self->{SessionObject}->UpdateSessionID(
+        $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
             SessionID => $Self->{SessionID},
             Key       => 'UserRequestedURL',
             Value     => '',
         );
 
         # redirect to original requested url
-        return $Self->{LayoutObject}->Redirect( OP => "$Self->{UserRequestedURL}" );
+        return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Redirect( OP => "$Self->{UserRequestedURL}" );
     }
 
     # show change screen
@@ -153,11 +157,11 @@ sub Run {
 sub _Screen {
     my ( $Self, %Param ) = @_;
 
-    my $Config = $Self->{ConfigObject}->Get('PreferencesGroups');
+    my $Config = $Kernel::OM->Get('Kernel::Config')->Get('PreferencesGroups');
 
     # show info
-    my $Output = $Self->{LayoutObject}->Header();
-    $Output .= $Self->{LayoutObject}->NavigationBar();
+    my $Output = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Header();
+    $Output .= $Kernel::OM->Get('Kernel::Output::HTML::Layout')->NavigationBar();
 
     # show policy
     my @Policy
@@ -165,7 +169,7 @@ sub _Screen {
     POLICY:
     for my $Block (@Policy) {
         next POLICY if !$Config->{Password}->{$Block};
-        $Self->{LayoutObject}->Block(
+        $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Block(
             Name => $Block,
             Data => { %Param, %{ $Config->{Password} } },
         );
@@ -173,18 +177,18 @@ sub _Screen {
 
     # show sysconfig settings link if admin
     if ( $Self->{'UserIsGroup[admin]'} ) {
-        $Self->{LayoutObject}->Block(
+        $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Block(
             Name => 'AdminConfig',
             Data => { %Param, %{ $Config->{Password} } },
         );
     }
 
-    $Output .= $Self->{LayoutObject}->Output(
+    $Output .= $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Output(
         TemplateFile => 'AgentPassword',
         Data         => { %Param, %{ $Config->{Password} } },
     );
 
-    $Output .= $Self->{LayoutObject}->Footer();
+    $Output .= $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Footer();
     return $Output;
 }
 

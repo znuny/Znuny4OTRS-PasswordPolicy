@@ -1,5 +1,4 @@
 # --
-# Kernel/Language/zh_CN_AgentPasswordPolicy.pm - translation file
 # Copyright (C) 2012-2015 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
