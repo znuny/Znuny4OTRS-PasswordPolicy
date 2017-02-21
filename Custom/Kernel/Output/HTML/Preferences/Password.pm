@@ -1,6 +1,6 @@
 # --
-# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
-# Copyright (C) 2012-2015 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
 # $origin: https://github.com/OTRS/otrs/blob/a4d17072f6bcf137aee494fde90613af7ec40c01/Kernel/Output/HTML/Preferences/Password.pm
 # --
