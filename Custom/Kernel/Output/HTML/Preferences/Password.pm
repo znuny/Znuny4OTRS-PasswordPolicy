@@ -195,8 +195,8 @@ sub Run {
 
     # check min size of password
     if ( $Config->{PasswordMinSize} && length $Pw < $Config->{PasswordMinSize} ) {
-       # ---
-# Znuny4OTRS-
+# ---
+# Znuny4OTRS-PasswordPolicy
 # ---
 #       $Self->{Error} = Translatable(
 #             'Can\'t update password, it must be at least %s characters long!',
