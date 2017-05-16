@@ -6,13 +6,13 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Modules::AgentPassword;
+package Kernel::Modules::CustomerPassword;
 
 use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    'Kernel::System::User',
+    'Kernel::System::CustomerUser',
 );
 
 use base qw(Kernel::Modules::BasePassword);
@@ -24,7 +24,7 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    $Self->{UserObject} = $Kernel::OM->Get('Kernel::System::User');
+    $Self->{UserObject} = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
     return $Self;
 }
