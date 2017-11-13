@@ -16,10 +16,11 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::AuthSession',
     'Kernel::System::CustomerUser',
+    'Kernel::System::Group',
     'Kernel::System::Main',
-    'Kernel::System::Time',
     'Kernel::System::User',
     'Kernel::System::Web::Request',
+    'Kernel::System::ZnunyTime',
 );
 
 sub PreRun {
@@ -27,7 +28,7 @@ sub PreRun {
 
     my $AuthSessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
     my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
-    my $TimeObject        = $Kernel::OM->Get('Kernel::System::Time');
+    my $TimeObject        = $Kernel::OM->Get('Kernel::System::ZnunyTime');
 
     if ( !$Self->{RequestedURL} ) {
         $Self->{RequestedURL} = 'Action=';
@@ -151,6 +152,7 @@ sub _Screen {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
 
     # show info
     my $Config = $Self->_PreferencesGroupsGet();
@@ -170,7 +172,12 @@ sub _Screen {
     }
 
     # show sysconfig settings link if admin
-    if ( $Self->{'UserIsGroup[admin]'} && $Self->{Action} !~ m{^Customer}xmsi ) {
+    my $HasAdminPermission = $GroupObject->PermissionCheck(
+        UserID    => $Self->{UserID},
+        GroupName => 'admin',
+        Type      => 'ro',
+    );
+    if ( $HasAdminPermission && $Self->{Action} !~ m{^Customer}xmsi ) {
         $LayoutObject->Block(
             Name => 'AdminConfig',
             Data => { %Param, %{ $Config->{Password} } },
@@ -186,9 +193,9 @@ sub _Screen {
     return $Output;
 }
 
-=item _AuthModuleGet()
+=head2 _AuthModuleGet()
 
-Returns the auth module for the correct interface.
+Returns the Auth module for the correct interface.
 
     my $Module = $Self->_AuthModuleGet();
 
@@ -233,7 +240,7 @@ sub _AuthModuleGet {
     return $Module;
 }
 
-=item _RedirectPasswordDialog()
+=head2 _RedirectPasswordDialog()
 
 Redirects to the password dialog for the correct interface.
 
@@ -254,7 +261,7 @@ sub _RedirectPasswordDialog {
     return $LayoutObject->Redirect( OP => 'Action=CustomerPassword' );
 }
 
-=item _PreferencesGroupsGet()
+=head2 _PreferencesGroupsGet()
 
 Returns the preferences for the correct interface.
 
@@ -275,7 +282,7 @@ sub _PreferencesGroupsGet {
     return $ConfigObject->Get('CustomerPreferencesGroups');
 }
 
-=item _FatalError()
+=head2 _FatalError()
 
 Returns a fatal error for the correct interface.
 
@@ -294,11 +301,9 @@ sub _FatalError {
 
     return $LayoutObject->FatalError(%Param) if $Self->{Action} =~ m{^Agent}xmsi;
     return $LayoutObject->CustomerFatalError(%Param);
-
-    return 1;
 }
 
-=item _Header()
+=head2 _Header()
 
 Returns the header for the correct interface.
 
@@ -319,7 +324,7 @@ sub _Header {
     return $LayoutObject->CustomerHeader();
 }
 
-=item _NavigationBar()
+=head2 _NavigationBar()
 
 Returns the navigation bar for the correct interface.
 
@@ -340,7 +345,7 @@ sub _NavigationBar {
     return $LayoutObject->CustomerNavigationBar();
 }
 
-=item _OutputTemplate()
+=head2 _OutputTemplate()
 
 Description.
 
@@ -361,7 +366,7 @@ sub _OutputTemplate {
     return $LayoutObject->Output( %Param, TemplateFile => 'CustomerPassword' );
 }
 
-=item _Footer()
+=head2 _Footer()
 
 Returns the footer for the correct interface.
 
