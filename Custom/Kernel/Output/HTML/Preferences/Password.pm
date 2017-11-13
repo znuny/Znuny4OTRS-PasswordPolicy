@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
-# $origin: https://github.com/OTRS/otrs/blob/a4d17072f6bcf137aee494fde90613af7ec40c01/Kernel/Output/HTML/Preferences/Password.pm
+# $origin: otrs - a4d17072f6bcf137aee494fde90613af7ec40c01 - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -28,7 +28,7 @@ our @ObjectDependencies = (
 #
     'Kernel::System::AuthSession',
     'Kernel::System::Main',
-    'Kernel::System::Time',
+    'Kernel::System::ZnunyTime',
 # ---
 );
 
@@ -279,12 +279,12 @@ sub Run {
     $Self->{UserObject}->SetPreferences(
         UserID => $Param{UserData}->{UserID},
         Key    => 'UserLastPwChangeTime',
-        Value  => $Kernel::OM->Get('Kernel::System::Time')->SystemTime(),
+        Value  => $Kernel::OM->Get('Kernel::System::ZnunyTime')->SystemTime(),
     );
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key    => 'UserLastPwChangeTime',
-        Value  => $Kernel::OM->Get('Kernel::System::Time')->SystemTime(),
+        Value  => $Kernel::OM->Get('Kernel::System::ZnunyTime')->SystemTime(),
     );
 
     # set password history

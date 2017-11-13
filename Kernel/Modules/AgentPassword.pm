@@ -15,7 +15,7 @@ our @ObjectDependencies = (
     'Kernel::System::User',
 );
 
-use base qw(Kernel::Modules::BasePassword);
+use parent qw(Kernel::Modules::BasePassword);
 
 sub new {
     my ( $Type, %Param ) = @_;
