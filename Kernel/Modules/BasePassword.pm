@@ -108,6 +108,19 @@ sub Run {
             UserID     => $Self->{UserID},
         );
 
+        # Agent
+        my %UserData;
+        if ( $Self->{Action} =~ m{\A(Admin|Agent)} ) {
+            %UserData = $Self->{UserObject}->GetUserData(
+                UserID => $Self->{UserID},
+            );
+        }
+        else {
+            %UserData = $Self->{UserObject}->CustomerUserDataGet(
+                User => $Self->{UserID},
+            );
+        }
+
         # run password change
         my $Success = $Object->Run(
             GetParam => {
@@ -115,7 +128,7 @@ sub Run {
                 NewPw  => [ $ParamObject->GetParam( Param => 'NewPw' ) ],
                 NewPw1 => [ $ParamObject->GetParam( Param => 'NewPw1' ) ],
             },
-            UserData => $Self,
+            UserData => \%UserData,
         );
 
         # show screen with error again
@@ -169,7 +182,7 @@ sub _Screen {
         GroupName => 'admin',
         Type      => 'ro',
     );
-    if ( $HasAdminPermission && $Self->{Action} !~ m{^Customer}xmsi ) {
+    if ($HasAdminPermission) {
         $LayoutObject->Block(
             Name => 'AdminConfig',
             Data => { %Param, %{ $Config->{Password} } },
@@ -213,7 +226,7 @@ sub _AuthModuleGet {
         return $Module if !$LayoutObject->{UserID};
 
         my %User = $UserObject->GetUserData(
-            User => $LayoutObject->{UserID},
+            UserID => $LayoutObject->{UserID},
         );
         return $Module if !%User || !$User{UserAuthBackend};
 
