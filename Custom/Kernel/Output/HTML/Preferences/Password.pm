@@ -274,20 +274,23 @@ sub Run {
         Key    => 'UserLastPw',
         Value  => $MD5Pw,
     );
-    my $Count = 0;
-    HISTORY:
-    for my $CountReal ( '', 1 .. $HistoryCount ) {
-        my $KeyReal = 'UserLastPw' . $CountReal;
-        next HISTORY if !$HistoryHash{$KeyReal};
 
-        $Count++;
-        my $KeyCount = 'UserLastPw' . $Count;
+    if ($HistoryCount) {
+        my $Count = 0;
+        HISTORY:
+        for my $CountReal ( '', 1 .. $HistoryCount ) {
+            my $KeyReal = 'UserLastPw' . $CountReal;
+            next HISTORY if !$HistoryHash{$KeyReal};
 
-        $Self->{UserObject}->SetPreferences(
-            UserID => $Param{UserData}->{UserID},
-            Key    => $KeyCount,
-            Value  => $HistoryHash{$KeyReal},
-        );
+            $Count++;
+            my $KeyCount = 'UserLastPw' . $Count;
+
+            $Self->{UserObject}->SetPreferences(
+                UserID => $Param{UserData}->{UserID},
+                Key    => $KeyCount,
+                Value  => $HistoryHash{$KeyReal},
+            );
+        }
     }
 # ---
 

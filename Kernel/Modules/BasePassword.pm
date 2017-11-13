@@ -30,10 +30,6 @@ sub PreRun {
     my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
     my $TimeObject        = $Kernel::OM->Get('Kernel::System::ZnunyTime');
 
-    if ( !$Self->{RequestedURL} ) {
-        $Self->{RequestedURL} = 'Action=';
-    }
-
     # cancel password action if an AgentInfo should be shown
     # to prevent enless redirect loop
     return if $Self->{Action} && $Self->{Action} eq 'AgentInfo';
@@ -56,7 +52,7 @@ sub PreRun {
     my $PasswordMaxValidTill       = $TimeObject->SystemTime() - $PasswordMaxValidTimeInDays;
 
     # ignore pre application module if it is calling self
-    return if $Self->{Action} =~ /^(CustomerPassword|AgentPassword|AdminPackage|AdminSysConfig)/;
+    return if $Self->{Action} =~ /^(CustomerPassword|AgentPassword|AdminPackage|AdminSystemConfiguration)/;
 
     # if last change time is over x days
     if ( !$Self->{UserLastPwChangeTime} || $Self->{UserLastPwChangeTime} < $PasswordMaxValidTill ) {
@@ -65,7 +61,7 @@ sub PreRun {
         $AuthSessionObject->UpdateSessionID(
             SessionID => $Self->{SessionID},
             Key       => 'UserRequestedURL',
-            Value     => $Self->{RequestedURL},
+            Value     => $Self->{RequestedURL} // '',
         );
 
         return $Self->_RedirectPasswordDialog();
@@ -81,10 +77,6 @@ sub Run {
     my $LayoutObject      = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $MainObject        = $Kernel::OM->Get('Kernel::System::Main');
     my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-    if ( !$Self->{RequestedURL} ) {
-        $Self->{RequestedURL} = 'Action=';
-    }
 
     # check config
     my $Config = $Self->_PreferencesGroupsGet();
@@ -216,7 +208,7 @@ sub _AuthModuleGet {
     my $Module;
 
     # Agent
-    if ( $Self->{Action} =~ m{\A(Agent|Admin)} ) {
+    if ( $Self->{Action} =~ m{\A(Admin|Agent)} ) {
         $Module = $ConfigObject->Get('AuthModule');
         return $Module if !$LayoutObject->{UserID};
 
@@ -364,8 +356,15 @@ sub _OutputTemplate {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->Output( %Param, TemplateFile => 'AgentPassword' ) if $Self->{Action} =~ m{^Agent}xmsi;
-    return $LayoutObject->Output( %Param, TemplateFile => 'CustomerPassword' );
+    my $TemplateFile = 'CustomerPassword';
+    if ( $Self->{Action} =~ m{\A(Admin|Agent)} ) {
+        $TemplateFile = 'AgentPassword';
+    }
+
+    return $LayoutObject->Output(
+        Data         => \%Param,
+        TemplateFile => $TemplateFile,
+    );
 }
 
 =head2 _Footer()
