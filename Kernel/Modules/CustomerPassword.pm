@@ -20,7 +20,6 @@ use parent qw(Kernel::Modules::BasePassword);
 sub new {
     my ( $Type, %Param ) = @_;
 
-    # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
 

@@ -1,15 +1,13 @@
-Password Policy
+# Richtlinien für Passwörter
 
-"Password Policy" ist eine generische Erweiterung, die gut mit allen Erweiterungen der OTRS AG zusammenarbeitet. Ein SysConfig Einstellung ermöglicht es Ihnen die "Password Policy" (siehe in die Konfigurationsoptionen) zu konfigurieren.
+Diese Erweiterung ist nützlich, wenn Richtlinien für sichere Kennwörter erforderlich sind, z. B. in CERT- oder Finanzumgebungen.
 
-Diese Erweiterung ist nützlich, wenn Richtlinien für sichere Kennwörter erforderlich sind, z.B. in CERT oder Finanzumgebungen.
+## Funktionen
 
-**Funktionen**
-
-* Passwort-Erneuerung nach X (konfigurierbaren) Tagen.
-* Passwort-Historie um das benutze Passwort X (konfigurierbaren) mal nicht nochmal zu benutzen.
-* Deaktivierung des Accunts nach x ungültigen Anmeldeversuchen.
-* Min. Größe des verwendeten Passworts.
-* Passwort benötigt min. 2 Klein- und 2 Großbuchstaben.
-* Passwort benötigt min. 2 Buchstaben.
-* Passwort benötigt min. 1 Zahl.
+* Passwort-Erneuerung nach x (konfigurierbaren) Tagen.
+* Passwort-Historie, um das benutzte Passwort nach x (konfigurierbaren) Verwendungen nicht noch einmal benutzen zu können.
+* Deaktivierung des Accounts nach x ungültigen Anmeldeversuchen.
+* Mindestlänge für Passwörter.
+* Passwort benötigt mindestens je zwei Klein- und Großbuchstaben.
+* Passwort benötigt mindestens zwei Buchstaben.
+* Passwort benötigt mindestens eine Ziffer.

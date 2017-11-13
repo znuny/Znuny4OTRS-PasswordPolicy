@@ -2,13 +2,12 @@
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
 # --
-# $origin: otrs - a4d17072f6bcf137aee494fde90613af7ec40c01 - Kernel/Output/HTML/Preferences/Password.pm
+# $origin: otrs - 75fc6d58aa7cecaa1d49a1f7bf36b4b7b7da3595 - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-## nofilter(TidyAll::Plugin::OTRS::Perl::ObjectDependencies)
 
 package Kernel::Output::HTML::Preferences::Password;
 
@@ -17,20 +16,7 @@ use warnings;
 
 use Kernel::Language qw(Translatable);
 
-our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::Output::HTML::Layout',
-    'Kernel::System::Auth',
-    'Kernel::System::CustomerAuth',
-# ---
-# Znuny4OTRS-PasswordPolicy
-# ---
-#
-    'Kernel::System::AuthSession',
-    'Kernel::System::Main',
-    'Kernel::System::ZnunyTime',
-# ---
-);
+our $ObjectManagerDisabled = 1;
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -122,8 +108,8 @@ sub Param {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ConfigObject   = $Kernel::OM->Get('Kernel::Config');
+    my $LanguageObject = $Kernel::OM->Get('Kernel::Language');
 
     # pref update db
     return 1 if $ConfigObject->Get('DemoSystem');
@@ -156,9 +142,6 @@ sub Run {
     my $AuthObject = $Kernel::OM->Get( 'Kernel::System::' . $AuthModule );
     return 1 if !$AuthObject;
 
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
     # validate current password
     if (
         !$AuthObject->Auth(
@@ -168,19 +151,20 @@ sub Run {
         )
         )
     {
-        $Self->{Error} = Translatable('The current password is not correct. Please try again!');
+        $Self->{Error} = $LanguageObject->Translate('The current password is not correct. Please try again!');
         return;
     }
 
     # check if pw is true
     if ( !$Pw || !$Pw1 ) {
-        $Self->{Error} = Translatable('Please supply your new password!');
+        $Self->{Error} = $LanguageObject->Translate('Please supply your new password!');
         return;
     }
 
     # compare pws
     if ( $Pw ne $Pw1 ) {
-        $Self->{Error} = Translatable('Can\'t update password, your new passwords do not match. Please try again!');
+        $Self->{Error}
+            = $LanguageObject->Translate('Can\'t update password, the new password and the repeated password do not match.');
         return;
     }
 
@@ -189,25 +173,18 @@ sub Run {
 
     # check if password is not matching PasswordRegExp
     if ( $Config->{PasswordRegExp} && $Pw !~ /$Config->{PasswordRegExp}/ ) {
-        $Self->{Error} = Translatable('Can\'t update password, it contains invalid characters!');
+        $Self->{Error} = $LanguageObject->Translate(
+            'This password is forbidden by the current system configuration. Please contact the administrator if you have additional questions.'
+        );
         return;
     }
 
     # check min size of password
     if ( $Config->{PasswordMinSize} && length $Pw < $Config->{PasswordMinSize} ) {
-# ---
-# Znuny4OTRS-PasswordPolicy
-# ---
-#       $Self->{Error} = Translatable(
-#             'Can\'t update password, it must be at least %s characters long!',
-#             $Config->{PasswordMinSize}
-#         );
-        $Self->{Error} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Translate(
+        $Self->{Error} = $LanguageObject->Translate(
             'Can\'t update password, it must be at least %s characters long!',
             $Config->{PasswordMinSize}
         );
-
-# ---
         return;
     }
 
@@ -217,28 +194,32 @@ sub Run {
         && ( $Pw !~ /[A-Z].*[A-Z]/ || $Pw !~ /[a-z].*[a-z]/ )
         )
     {
-        $Self->{Error}
-            = Translatable('Can\'t update password, it must contain at least 2 lowercase and 2 uppercase characters!');
+        $Self->{Error} = $LanguageObject->Translate(
+            'Can\'t update password, it must contain at least 2 lowercase and 2 uppercase letter characters!'
+        );
         return;
     }
 
     # check min 1 digit password
     if ( $Config->{PasswordNeedDigit} && $Pw !~ /\d/ ) {
-        $Self->{Error} = Translatable('Can\'t update password, it must contain at least 1 digit!');
+        $Self->{Error} = $LanguageObject->Translate('Can\'t update password, it must contain at least 1 digit!');
         return;
     }
 
     # check min 2 char password
     if ( $Config->{PasswordMin2Characters} && $Pw !~ /[A-z][A-z]/ ) {
-        $Self->{Error} = Translatable('Can\'t update password, it must contain at least 2 characters!');
+        $Self->{Error}
+            = $LanguageObject->Translate('Can\'t update password, it must contain at least 2 letter characters!');
         return;
     }
 
 # ---
 # Znuny4OTRS-PasswordPolicy
 # ---
+    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
+
     # md5 sum for new pw, needed for password history
-    my $MD5Pw = $Kernel::OM->Get('Kernel::System::Main')->MD5sum(
+    my $MD5Pw = $MainObject->MD5sum(
         String => $Pw,
     );
     my %HistoryHash;
@@ -247,20 +228,18 @@ sub Run {
 
         HISTORY:
         for my $Count ( '', 1 .. $HistoryCount ) {
-
             my $HistoryKey = 'UserLastPw' . $Count;
-
             next HISTORY if !$Param{UserData}->{$HistoryKey};
 
             # remember history
             $HistoryHash{$HistoryKey} = $Param{UserData}->{$HistoryKey};
 
+            next HISTORY if $MD5Pw ne $Param{UserData}->{$HistoryKey};
+
             # if already used, complain about
-            if ( $MD5Pw eq $Param{UserData}->{$HistoryKey} ) {
-                $Self->{Error}
-                    = "Can\'t update password, this password has already been used. Please choose a new one!";
-                return;
-            }
+            $Self->{Error}
+                = "Can\'t update password, this password has already been used. Please choose a new one!";
+            return;
         }
     }
 # ---
@@ -275,16 +254,18 @@ sub Run {
 # ---
 # Znuny4OTRS-PasswordPolicy
 # ---
+    my $TimeObject = $Kernel::OM->Get('Kernel::System::ZnunyTime');
+
     # set password change time
     $Self->{UserObject}->SetPreferences(
         UserID => $Param{UserData}->{UserID},
         Key    => 'UserLastPwChangeTime',
-        Value  => $Kernel::OM->Get('Kernel::System::ZnunyTime')->SystemTime(),
+        Value  => $TimeObject->SystemTime(),
     );
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
         SessionID => $Self->{SessionID},
-        Key    => 'UserLastPwChangeTime',
-        Value  => $Kernel::OM->Get('Kernel::System::ZnunyTime')->SystemTime(),
+        Key       => 'UserLastPwChangeTime',
+        Value     => $TimeObject->SystemTime(),
     );
 
     # set password history
@@ -296,9 +277,7 @@ sub Run {
     my $Count = 0;
     HISTORY:
     for my $CountReal ( '', 1 .. $HistoryCount ) {
-
         my $KeyReal = 'UserLastPw' . $CountReal;
-
         next HISTORY if !$HistoryHash{$KeyReal};
 
         $Count++;
@@ -312,7 +291,7 @@ sub Run {
     }
 # ---
 
-    $Self->{Message} = Translatable('Preferences updated successfully!');
+    $Self->{Message} = $LanguageObject->Translate('Preferences updated successfully!');
     return 1;
 }
 
