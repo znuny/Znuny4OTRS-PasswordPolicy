@@ -214,29 +214,31 @@ sub _AuthModuleGet {
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
     my $Module;
-    if ( $Self->{Action} =~ m{^Agent}xmsi ) {
+
+    # Agent
+    if ( $Self->{Action} =~ m{\A(Agent|Admin)} ) {
         $Module = $ConfigObject->Get('AuthModule');
+        return $Module if !$LayoutObject->{UserID};
 
-        if ( $LayoutObject->{UserID} ) {
-            my %User = $UserObject->GetUserData(
-                User => $LayoutObject->{UserID},
-            );
+        my %User = $UserObject->GetUserData(
+            User => $LayoutObject->{UserID},
+        );
+        return $Module if !%User || !$User{UserAuthBackend};
 
-            $Module = $ConfigObject->Get( 'AuthModule' . $User{UserAuthBackend} );
-        }
-    }
-    else {
-        $Module = $ConfigObject->Get('Customer::AuthModule');
-
-        if ( $LayoutObject->{UserID} ) {
-            my %User = $CustomerUserObject->CustomerUserDataGet(
-                User => $LayoutObject->{UserID},
-            );
-
-            $Module = $ConfigObject->Get( 'Customer::AuthModule' . $User{UserAuthBackend} );
-        }
+        $Module = $ConfigObject->Get( 'AuthModule' . $User{UserAuthBackend} ) || $Module;
+        return $Module;
     }
 
+    # Customer user
+    $Module = $ConfigObject->Get('Customer::AuthModule');
+    return $Module if !$LayoutObject->{UserID};
+
+    my %User = $CustomerUserObject->CustomerUserDataGet(
+        User => $LayoutObject->{UserID},
+    );
+    return $Module if !%User || !$User{UserAuthBackend};
+
+    $Module = $ConfigObject->Get( 'Customer::AuthModule' . $User{UserAuthBackend} ) || $Module;
     return $Module;
 }
 
@@ -257,7 +259,7 @@ sub _RedirectPasswordDialog {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->Redirect( OP => 'Action=AgentPassword' ) if $Self->{Action} =~ m{^Agent}xmsi;
+    return $LayoutObject->Redirect( OP => 'Action=AgentPassword' ) if $Self->{Action} =~ m{\A(Admin|Agent)}xmsi;
     return $LayoutObject->Redirect( OP => 'Action=CustomerPassword' );
 }
 
