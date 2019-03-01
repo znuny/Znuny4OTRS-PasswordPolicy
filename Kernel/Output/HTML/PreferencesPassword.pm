@@ -1,6 +1,9 @@
 # --
-# Kernel/Output/HTML/PreferencesPassword.pm
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2019 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Output::HTML::PreferencesPassword;
@@ -16,11 +19,11 @@ sub new {
     bless( $Self, $Type );
 
     # get needed objects
-    for (
+    for my $Needed (
         qw(ConfigObject LogObject DBObject LayoutObject UserID ParamObject ConfigItem MainObject TimeObject)
         )
     {
-        die "Got no $_!" if !$Self->{$_};
+        die "Got no $Needed!" if !$Self->{$Needed};
     }
 
     return $Self;
@@ -96,8 +99,7 @@ sub Run {
 
     # compare pws
     if ( $Pw ne $Pw1 ) {
-        $Self->{Error}
-            = 'Can\'t update password, your new passwords do not match! Please try again!';
+        $Self->{Error} = 'Can\'t update password, your new passwords do not match! Please try again!';
         return;
     }
 
@@ -178,8 +180,8 @@ sub Run {
     );
     $Self->{SessionObject}->UpdateSessionID(
         SessionID => $Self->{SessionID},
-        Key    => 'UserLastPwChangeTime',
-        Value  => $Self->{TimeObject}->SystemTime(),
+        Key       => 'UserLastPwChangeTime',
+        Value     => $Self->{TimeObject}->SystemTime(),
     );
 
     # set password history
