@@ -1,12 +1,17 @@
 # --
-# Kernel/Modules/AgentPassword.pm - to restrict password policy
-# Copyright (C) 2014 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2019 Znuny GmbH, http://znuny.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Modules::AgentPassword;
 
 use strict;
 use warnings;
+
+use Kernel::Output::HTML::PreferencesPassword;
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -15,10 +20,9 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # check needed objects
-    for (qw(ParamObject DBObject LayoutObject LogObject ConfigObject TimeObject)) {
-        if ( !$Self->{$_} ) {
-            $Self->{LayoutObject}->FatalError( Message => "Got no $_!" );
+    for my $Needed (qw(ParamObject DBObject LayoutObject LogObject ConfigObject TimeObject)) {
+        if ( !$Self->{$Needed} ) {
+            $Self->{LayoutObject}->FatalError( Message => "Got no $Needed!" );
         }
     }
 
@@ -53,9 +57,8 @@ sub PreRun {
     return if $Module =~ /(LDAP|HTTPBasicAuth|Radius)/i;
 
     # redirect if password change time is in scope
-    my $PasswordMaxValidTimeInDays
-        = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
-    my $PasswordMaxValidTill = $Self->{TimeObject}->SystemTime() - $PasswordMaxValidTimeInDays;
+    my $PasswordMaxValidTimeInDays = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
+    my $PasswordMaxValidTill       = $Self->{TimeObject}->SystemTime() - $PasswordMaxValidTimeInDays;
 
     # ignore pre application module if it is calling self
     return if $Self->{Action} =~ /^(AgentPassword|AdminPackage|AdminSysConfig)/;
@@ -167,7 +170,7 @@ sub _Screen {
     }
 
     # show sysconfig settings link if admin
-    if ($Self->{'UserIsGroup[admin]'}) {
+    if ( $Self->{'UserIsGroup[admin]'} ) {
         $Self->{LayoutObject}->Block(
             Name => 'AdminConfig',
             Data => { %Param, %{ $Config->{Password} } },
@@ -176,7 +179,7 @@ sub _Screen {
 
     $Output .= $Self->{LayoutObject}->Output(
         TemplateFile => 'AgentPassword',
-        Data => { %Param, %{ $Config->{Password} } },
+        Data         => { %Param, %{ $Config->{Password} } },
     );
 
     $Output .= $Self->{LayoutObject}->Footer();
