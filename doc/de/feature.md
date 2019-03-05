@@ -1,4 +1,4 @@
-# Richtlinien für Passwörter
+# Funktionalität
 
 Diese Erweiterung ist nützlich, wenn Richtlinien für sichere Kennwörter erforderlich sind, z. B. in CERT- oder Finanzumgebungen.
 
