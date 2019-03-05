@@ -1,4 +1,4 @@
-Password Policy
+# Functionality
 
 "Password Policy" is a generic extension which works well together with all extensions provided by OTRS AG. A SysConfig setting allows you to configure "Password Policy" (see more in the configuration options).
 

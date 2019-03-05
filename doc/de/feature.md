@@ -1,4 +1,4 @@
-Password Policy
+# Funktionalität
 
 "Password Policy" ist eine generische Erweiterung, die gut mit allen Erweiterungen der OTRS AG zusammenarbeitet. Ein SysConfig Einstellung ermöglicht es Ihnen die "Password Policy" (siehe in die Konfigurationsoptionen) zu konfigurieren.
 

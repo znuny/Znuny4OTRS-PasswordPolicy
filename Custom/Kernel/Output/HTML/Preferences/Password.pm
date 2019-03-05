@@ -1,12 +1,12 @@
 # --
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
-# Copyright (C) 2012-2017 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2012-2019 Znuny GmbH, http://znuny.com/
 # --
-# $origin: https://github.com/OTRS/otrs/blob/a4d17072f6bcf137aee494fde90613af7ec40c01/Kernel/Output/HTML/Preferences/Password.pm
+# $origin: otrs - a4d17072f6bcf137aee494fde90613af7ec40c01 - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# the enclosed file COPYING for license information (GPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
 ## nofilter(TidyAll::Plugin::OTRS::Perl::ObjectDependencies)
 
