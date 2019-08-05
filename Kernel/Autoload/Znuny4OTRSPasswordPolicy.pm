@@ -32,7 +32,7 @@ our @ObjectDependencies = (
     *Kernel::Output::HTML::Layout::Redirect = sub {
         my ( $Self, %Param ) = @_;
 
-        return if $Param{OP} eq 'AgentTimeAccountingEdit' && $Self->{Action} =~ /^(CustomerPassword|AgentPassword|AdminPackage|AdminSystemConfiguration)/;
+        return if $Param{OP} =~ /AgentTimeAccountingEdit/ && $Self->{Action} =~ /^(CustomerPassword|AgentPassword|AdminPackage|AdminSystemConfiguration)/;
         return &{$Redirect}( $Self, %Param );
     }
 }
