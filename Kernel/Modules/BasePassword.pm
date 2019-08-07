@@ -357,8 +357,14 @@ sub _OutputTemplate {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->Output( %Param, TemplateFile => 'AgentPassword' ) if $Self->{Action} =~ m{^Agent}xmsi;
-    return $LayoutObject->Output( %Param, TemplateFile => 'CustomerPassword' );
+    return $LayoutObject->Output(
+        TemplateFile => 'AgentPassword',
+        Data         => \%Param,
+    ) if $Self->{Action} =~ m{^Agent}xmsi;
+    return $LayoutObject->Output(
+        TemplateFile => 'CustomerPassword',
+        Data         => \%Param,
+    );
 }
 
 =item _Footer()
