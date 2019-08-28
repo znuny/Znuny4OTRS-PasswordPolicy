@@ -51,6 +51,11 @@ sub PreRun {
     my $PasswordMaxValidTimeInDays = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
     my $PasswordMaxValidTill       = $TimeObject->SystemTime() - $PasswordMaxValidTimeInDays;
 
+    # skip public frontends
+    my $FrontendType = $Self->_FrontendTypeGet();
+    return if !$FrontendType;
+    return if $FrontendType eq 'Public';
+
     # ignore pre application module if it is calling self
     return if $Self->{Action} =~ /^(CustomerPassword|AgentPassword|AdminPackage|AdminSystemConfiguration)/;
 
@@ -108,9 +113,11 @@ sub Run {
             UserID     => $Self->{UserID},
         );
 
+        my $FrontendType = $Self->_FrontendTypeGet();
+
         # Agent
         my %UserData;
-        if ( $Self->{Action} =~ m{\A(Admin|Agent)} ) {
+        if ( $FrontendType eq 'Agent' ) {
             %UserData = $Self->{UserObject}->GetUserData(
                 UserID => $Self->{UserID},
             );
@@ -218,10 +225,12 @@ sub _AuthModuleGet {
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
+    my $FrontendType = $Self->_FrontendTypeGet();
+
     my $Module;
 
     # Agent
-    if ( $Self->{Action} =~ m{\A(Admin|Agent)} ) {
+    if ( $FrontendType eq 'Agent' ) {
         $Module = $ConfigObject->Get('AuthModule');
         return $Module if !$LayoutObject->{UserID};
 
@@ -264,7 +273,9 @@ sub _RedirectPasswordDialog {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->Redirect( OP => 'Action=AgentPassword' ) if $Self->{Action} =~ m{\A(Admin|Agent)}xmsi;
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return $LayoutObject->Redirect( OP => 'Action=AgentPassword' ) if $FrontendType eq 'Agent';
     return $LayoutObject->Redirect( OP => 'Action=CustomerPassword' );
 }
 
@@ -285,7 +296,9 @@ sub _PreferencesGroupsGet {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    return $ConfigObject->Get('PreferencesGroups') if $Self->{Action} =~ m{^Agent}xmsi;
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return $ConfigObject->Get('PreferencesGroups') if $FrontendType eq 'Agent';
     return $ConfigObject->Get('CustomerPreferencesGroups');
 }
 
@@ -306,7 +319,9 @@ sub _FatalError {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->FatalError(%Param) if $Self->{Action} =~ m{^Agent}xmsi;
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return $LayoutObject->FatalError(%Param) if $FrontendType eq 'Agent';
     return $LayoutObject->CustomerFatalError(%Param);
 }
 
@@ -327,7 +342,9 @@ sub _Header {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->Header() if $Self->{Action} =~ m{^Agent}xmsi;
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return $LayoutObject->Header() if $FrontendType eq 'Agent';
     return $LayoutObject->CustomerHeader();
 }
 
@@ -348,7 +365,9 @@ sub _NavigationBar {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->NavigationBar() if $Self->{Action} =~ m{^Agent}xmsi;
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return $LayoutObject->NavigationBar() if $FrontendType eq 'Agent';
     return $LayoutObject->CustomerNavigationBar();
 }
 
@@ -369,8 +388,10 @@ sub _OutputTemplate {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
+    my $FrontendType = $Self->_FrontendTypeGet();
+
     my $TemplateFile = 'CustomerPassword';
-    if ( $Self->{Action} =~ m{\A(Admin|Agent)} ) {
+    if ( $FrontendType eq 'Agent' ) {
         $TemplateFile = 'AgentPassword';
     }
 
@@ -397,8 +418,39 @@ sub _Footer {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    return $LayoutObject->Footer() if $Self->{Action} =~ m{^Agent}xmsi;
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return $LayoutObject->Footer() if $FrontendType eq 'Agent';
     return $LayoutObject->CustomerFooter();
+}
+
+=head2 _FrontendTypeGet()
+
+This function returns the type of the action.
+
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+Returns:
+
+    my $FrontendType = 'Agent';
+    my $FrontendType = 'Customer';
+    my $FrontendType = 'Public';
+
+=cut
+
+sub _FrontendTypeGet {
+    my ( $Self, %Param ) = @_;
+
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my $FrontendModules         = $ConfigObject->Get('Frontend::Module')         || {};
+    my $CustomerFrontendModules = $ConfigObject->Get('CustomerFrontend::Module') || {};
+    my $PublicFrontendModules   = $ConfigObject->Get('PublicFrontend::Module')   || {};
+
+    return 'Agent'    if $FrontendModules->{ $Self->{Action} };
+    return 'Customer' if $CustomerFrontendModules->{ $Self->{Action} };
+    return 'Public'   if $PublicFrontendModules->{ $Self->{Action} };
+    return;
 }
 
 1;
