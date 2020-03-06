@@ -1,11 +1,9 @@
-image: registry.znuny.com/znuny/docker-otrs6ci:latest
-
-
+image: registry.znuny.com/znuny/internal/docker-otrs6ci:$OTRS_TAG
 
 stages:
   - deploy
 
-job_deploy_otrs_Znuny4OTRSPasswordPolicy:
+deploy:
   stage: deploy
   script:
-    - sh /sync_repo.sh git@github.com:znuny/Znuny4OTRS-PasswordPolicy.git
+    - sh /sync_repo.sh git@github.com:znuny/$CI_PROJECT_NAME.git
