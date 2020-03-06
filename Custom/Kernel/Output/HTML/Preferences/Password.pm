@@ -1,6 +1,6 @@
 # --
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
-# Copyright (C) 2012-2019 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # --
 # $origin: otrs - 75fc6d58aa7cecaa1d49a1f7bf36b4b7b7da3595 - Kernel/Output/HTML/Preferences/Password.pm
 # --
