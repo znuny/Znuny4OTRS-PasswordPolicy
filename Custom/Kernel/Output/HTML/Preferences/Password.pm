@@ -1,8 +1,8 @@
 # --
-# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
+# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
 # --
-# $origin: otrs - 75fc6d58aa7cecaa1d49a1f7bf36b4b7b7da3595 - Kernel/Output/HTML/Preferences/Password.pm
+# $origin: otrs - 8207d0f681adcdeb5c1b497ac547a1d9749838d5 - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
@@ -60,24 +60,27 @@ sub Param {
         @Params,
         {
             %Param,
-            Key   => Translatable('Current password'),
-            Name  => 'CurPw',
-            Raw   => 1,
-            Block => 'Password'
+            Key          => Translatable('Current password'),
+            Name         => 'CurPw',
+            Raw          => 1,
+            Block        => 'Password',
+            Autocomplete => 'current-password',
         },
         {
             %Param,
-            Key   => Translatable('New password'),
-            Name  => 'NewPw',
-            Raw   => 1,
-            Block => 'Password'
+            Key          => Translatable('New password'),
+            Name         => 'NewPw',
+            Raw          => 1,
+            Block        => 'Password',
+            Autocomplete => 'new-password',
         },
         {
             %Param,
-            Key   => Translatable('Verify password'),
-            Name  => 'NewPw1',
-            Raw   => 1,
-            Block => 'Password'
+            Key          => Translatable('Verify password'),
+            Name         => 'NewPw1',
+            Raw          => 1,
+            Block        => 'Password',
+            Autocomplete => 'current-password',
         },
     );
 
@@ -96,7 +99,7 @@ sub Param {
             Key   => '2 Factor Token',
             Name  => 'TwoFactorToken',
             Raw   => 1,
-            Block => 'Password',
+            Block => 'Input',
         };
 
         last COUNT;
@@ -164,7 +167,7 @@ sub Run {
     # compare pws
     if ( $Pw ne $Pw1 ) {
         $Self->{Error}
-            = $LanguageObject->Translate('Can\'t update password, the new password and the repeated password do not match.');
+            = $LanguageObject->Translate('Can\'t update password, your new passwords do not match. Please try again!');
         return;
     }
 
