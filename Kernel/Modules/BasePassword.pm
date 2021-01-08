@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -131,9 +131,10 @@ sub Run {
         # run password change
         my $Success = $Object->Run(
             GetParam => {
-                CurPw  => [ $ParamObject->GetParam( Param => 'CurPw' ) ],
-                NewPw  => [ $ParamObject->GetParam( Param => 'NewPw' ) ],
-                NewPw1 => [ $ParamObject->GetParam( Param => 'NewPw1' ) ],
+                CurPw          => [ $ParamObject->GetParam( Param => 'CurPw' ) ],
+                NewPw          => [ $ParamObject->GetParam( Param => 'NewPw' ) ],
+                NewPw1         => [ $ParamObject->GetParam( Param => 'NewPw1' ) ],
+                TwoFactorToken => [ $ParamObject->GetParam( Param => 'TwoFactorToken' ) ],
             },
             UserData => \%UserData,
         );
@@ -183,7 +184,24 @@ sub _Screen {
         );
     }
 
-    # show sysconfig settings link if admin
+    # set the TwoFactorModue setting name depending on the interface
+    my $AuthTwoFactorModule = $LayoutObject->{SessionSource} eq 'AgentInterface'
+        ? 'AuthTwoFactorModule'
+        : 'Customer::AuthTwoFactorModule';
+
+    # show 2 factor password input if we have at least one backend enabled
+    COUNT:
+    for my $Count ( '', 1 .. 10 ) {
+        next COUNT if !$ConfigObject->Get( $AuthTwoFactorModule . $Count );
+
+        $LayoutObject->Block(
+            Name => 'TwoFactorToken',
+        );
+
+        last COUNT;
+    }
+
+    # show SysConfig settings link if admin
     my $HasAdminPermission = $GroupObject->PermissionCheck(
         UserID    => $Self->{UserID},
         GroupName => 'admin',
