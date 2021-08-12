@@ -184,8 +184,10 @@ sub _Screen {
         );
     }
 
+    my $FrontendType = $Self->_FrontendTypeGet() // '';
+
     # set the TwoFactorModue setting name depending on the interface
-    my $AuthTwoFactorModule = $LayoutObject->{SessionSource} eq 'AgentInterface'
+    my $AuthTwoFactorModule = $FrontendType eq 'Agent'
         ? 'AuthTwoFactorModule'
         : 'Customer::AuthTwoFactorModule';
 
@@ -201,17 +203,20 @@ sub _Screen {
         last COUNT;
     }
 
-    # show SysConfig settings link if admin
-    my $HasAdminPermission = $GroupObject->PermissionCheck(
-        UserID    => $Self->{UserID},
-        GroupName => 'admin',
-        Type      => 'ro',
-    );
-    if ($HasAdminPermission) {
-        $LayoutObject->Block(
-            Name => 'AdminConfig',
-            Data => { %Param, %{ $Config->{Password} } },
+    if ( $FrontendType eq 'Agent' ) {
+
+        # show SysConfig settings link if admin
+        my $HasAdminPermission = $GroupObject->PermissionCheck(
+            UserID    => $Self->{UserID},
+            GroupName => 'admin',
+            Type      => 'ro',
         );
+        if ($HasAdminPermission) {
+            $LayoutObject->Block(
+                Name => 'AdminConfig',
+                Data => { %Param, %{ $Config->{Password} } },
+            );
+        }
     }
 
     $Output .= $Self->_OutputTemplate(
