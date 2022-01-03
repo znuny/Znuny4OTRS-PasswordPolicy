@@ -1,11 +1,11 @@
 ![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
 
 
-![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-PasswordPolicy/rel-6_1)
+![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-PasswordPolicy/rel-6_2)
 
 Password Policy
 ===============
-This add-on is useful if strong password policies are needed, e. g. in CERT or financial environments.
+This add-on is useful if strong password policies are needed, e.g. in CERT or financial environments.
 
 ![Screenshot SysConfig](https://github.com/znuny/Znuny4OTRS-PasswordPolicy/blob/master/doc/en/screenshots/passwordpolicy.png)
 
@@ -21,11 +21,11 @@ This add-on is useful if strong password policies are needed, e. g. in CERT or f
 
 **Prerequisites**
 
-- Znuny 6.1
+- Znuny 6.2
 
 **Installation**
 
-Download the [package](https://addons.znuny.com/api/addon_repos/public/2097/latest) and install it via admin interface -> package manager.
+Download the [package](https://addons.znuny.com/api/addon_repos/public/2104/latest) and install it via admin interface -> package manager.
 
 **Configuration**
 
@@ -42,7 +42,7 @@ Via system configuration options `PreferencesGroups###Password` and `CustomerPre
 
 **Download**
 
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2097/latest).
+Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2104/latest).
 
 **Professional Support**
 
