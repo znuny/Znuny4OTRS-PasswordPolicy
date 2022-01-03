@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2012-2021 Znuny GmbH, http://znuny.com/
+# Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -20,7 +20,7 @@ our @ObjectDependencies = (
     'Kernel::System::Main',
     'Kernel::System::User',
     'Kernel::System::Web::Request',
-    'Kernel::System::ZnunyTime',
+    'Kernel::System::Time',
 );
 
 sub PreRun {
@@ -28,7 +28,7 @@ sub PreRun {
 
     my $AuthSessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
     my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
-    my $TimeObject        = $Kernel::OM->Get('Kernel::System::ZnunyTime');
+    my $TimeObject        = $Kernel::OM->Get('Kernel::System::Time');
 
     # cancel password action if an AgentInfo should be shown
     # to prevent enless redirect loop

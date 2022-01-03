@@ -1,7 +1,7 @@
 ![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
 
 
-![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-PasswordPolicy/master)
+![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-PasswordPolicy/rel-6_1)
 
 Password Policy
 ===============
@@ -21,17 +21,15 @@ This add-on is useful if strong password policies are needed, e. g. in CERT or f
 
 **Prerequisites**
 
-- OTRS 6
-- [Znuny4OTRS-Repo](https://www.znuny.com/add-ons/znuny4otrs-repository)
+- Znuny 6.1
 
 **Installation**
 
-Download the [package](https://addons.znuny.com/api/addon_repos/public/1072/latest) and install it via admin interface -> package manager or use [Znuny4OTRS-Repo](https://www.znuny.com/add-ons/znuny4otrs-repository).
-
+Download the [package](https://addons.znuny.com/api/addon_repos/public/2097/latest) and install it via admin interface -> package manager.
 
 **Configuration**
 
-Via System Configurations options `PreferencesGroups###Password` and `CustomerPreferencesGroups###Password`:
+Via system configuration options `PreferencesGroups###Password` and `CustomerPreferencesGroups###Password`:
 
 * PasswordMaxValidTimeInDays (max. valid days of a password)
 * PasswordNeedDigit (at least one digit is required)
@@ -44,14 +42,14 @@ Via System Configurations options `PreferencesGroups###Password` and `CustomerPr
 
 **Download**
 
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/1072/latest).
+Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2097/latest).
 
-**Commercial Support**
+**Professional Support**
 
-For this add-on and for OTRS in general visit [www.znuny.com](https://www.znuny.com). Looking forward to hear from you!
+For this add-on and for Znuny in general visit [www.znuny.com](https://www.znuny.com). Looking forward to hear from you!
 
 Enjoy!
 
 Your Znuny Team!
 
-[www.znuny.com](https://www.znuny.com)
+[https://www.znuny.com](https://www.znuny.com)
