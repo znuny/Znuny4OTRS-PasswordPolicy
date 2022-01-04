@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2022 OTRS AG, https://otrs.com/
 # Copyright (C) 2012-2022 Znuny GmbH, http://znuny.com/
 # --
-# $origin: znuny - 012b2cb0daf8519ff314f751ad03b62219f63331 - Kernel/Output/HTML/Preferences/Password.pm
+# $origin: znuny - 6b1abd14eea02f4857d30e3fb94b5ac6382a82c9 - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
@@ -96,10 +96,11 @@ sub Param {
 
         push @Params, {
             %Param,
-            Key   => '2 Factor Token',
-            Name  => 'TwoFactorToken',
-            Raw   => 1,
-            Block => 'Input',
+            Key          => '2 Factor Token',
+            Name         => 'TwoFactorToken',
+            Raw          => 1,
+            Block        => 'Input',
+            Autocomplete => 'one-time-code',
         };
 
         last COUNT;
