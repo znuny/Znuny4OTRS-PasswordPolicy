@@ -31,7 +31,7 @@ sub PreRun {
     my $TimeObject        = $Kernel::OM->Get('Kernel::System::Time');
 
     # cancel password action if an AgentInfo should be shown
-    # to prevent enless redirect loop
+    # to prevent endless redirect loop
     return if $Self->{Action} && $Self->{Action} eq 'AgentInfo';
 
     # return if password max time is not configured

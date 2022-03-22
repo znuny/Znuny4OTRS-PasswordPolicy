@@ -21,11 +21,11 @@ This add-on is useful if strong password policies are needed, e.g. in CERT or fi
 
 **Prerequisites**
 
-- Znuny 6.2
+- Znuny 6.3
 
 **Installation**
 
-Download the [package](https://addons.znuny.com/api/addon_repos/public/2104/latest) and install it via admin interface -> package manager.
+Download the [package](https://addons.znuny.com/api/addon_repos/public/2213/latest) and install it via admin interface -> package manager.
 
 **Configuration**
 
@@ -42,7 +42,7 @@ Via system configuration options `PreferencesGroups###Password` and `CustomerPre
 
 **Download**
 
-Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2104/latest).
+Download the [latest version](https://addons.znuny.com/api/addon_repos/public/2213/latest).
 
 **Professional Support**
 
