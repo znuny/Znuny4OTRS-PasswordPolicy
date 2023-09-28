@@ -10,6 +10,7 @@ package Kernel::Modules::BasePassword;
 
 use strict;
 use warnings;
+use utf8;
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -61,7 +62,9 @@ sub PreRun {
     return if $FrontendType eq 'Public';
 
     # ignore pre application module if it is calling self
-    return if $Self->{Action} =~ /^(CustomerPassword|AgentPassword|AdminPackage|AdminSystemConfiguration)/;
+    return
+        if $Self->{Action}
+        =~ /^(AJAX|CustomerPassword|AgentPassword|AdminPackage|AdminSystemConfiguration|AgentPreferences)/;
 
     # if last change time is over x days
     if ( !$Self->{UserLastPwChangeTime} || $Self->{UserLastPwChangeTime} < $PasswordMaxValidTill ) {

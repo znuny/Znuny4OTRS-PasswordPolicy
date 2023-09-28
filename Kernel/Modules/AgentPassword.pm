@@ -10,6 +10,7 @@ package Kernel::Modules::AgentPassword;
 
 use strict;
 use warnings;
+use utf8;
 
 our @ObjectDependencies = (
     'Kernel::System::User',

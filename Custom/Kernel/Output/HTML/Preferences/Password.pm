@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # Copyright (C) 2012 Znuny GmbH, https://znuny.com/
 # --
-# $origin: znuny - 460ef44565300c6b979b0743833e3800fdbebf81 - Kernel/Output/HTML/Preferences/Password.pm
+# $origin: Znuny - 2acbc11790726af75000f3c382fd1a0860fbbc4b - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
@@ -13,6 +13,7 @@ package Kernel::Output::HTML::Preferences::Password;
 
 use strict;
 use warnings;
+use utf8;
 
 use Kernel::Language qw(Translatable);
 
@@ -259,6 +260,7 @@ sub Run {
 # Znuny-PasswordPolicy
 # ---
     my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+    my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
 
     # set password change time
     $Self->{UserObject}->SetPreferences(
@@ -266,7 +268,7 @@ sub Run {
         Key    => 'UserLastPwChangeTime',
         Value  => $TimeObject->SystemTime(),
     );
-    $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
+    $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'UserLastPwChangeTime',
         Value     => $TimeObject->SystemTime(),
