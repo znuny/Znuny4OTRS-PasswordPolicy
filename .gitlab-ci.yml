@@ -4,6 +4,8 @@ include:
 
 stages:
   - utils
+  - check
+  - unittest
   - deploy
 
 GitHub:
