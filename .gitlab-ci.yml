@@ -1,9 +1,8 @@
-image: registry.znuny.com/znuny/internal/alpine-deployment:stable
+include:
+  - project: $INCLUDE_PROJECT
+    file: '/templates/gitlab/base.yml'
 
 stages:
   - deploy
-
-deploy:
-  stage: deploy
-  script:
-    - sh /sync_repo.sh git@github.com:znuny/$CI_PROJECT_NAME.git
+GitHub:
+  extends: .deploy_github
