@@ -46,6 +46,12 @@ sub PreRun {
     return if !$Config->{Password};
     return if !$Config->{Password}->{PasswordMaxValidTimeInDays};
 
+    # skip public frontends
+    my $FrontendType = $Self->_FrontendTypeGet();
+
+    return if !$FrontendType;
+    return if $FrontendType eq 'Public';
+
     # check auth module
     my $Module = $Self->_AuthModuleGet();
 
@@ -55,11 +61,6 @@ sub PreRun {
     # redirect if password change time is in scope
     my $PasswordMaxValidTimeInDays = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
     my $PasswordMaxValidTill       = $TimeObject->SystemTime() - $PasswordMaxValidTimeInDays;
-
-    # skip public frontends
-    my $FrontendType = $Self->_FrontendTypeGet();
-    return if !$FrontendType;
-    return if $FrontendType eq 'Public';
 
     # ignore pre application module if it is calling self
     return
@@ -272,18 +273,20 @@ sub _AuthModuleGet {
         $Module = $ConfigObject->Get( 'AuthModule' . $User{UserAuthBackend} ) || $Module;
         return $Module;
     }
+    elsif ( $FrontendType eq 'Customer' ) {
 
-    # Customer user
-    $Module = $ConfigObject->Get('Customer::AuthModule');
-    return $Module if !$LayoutObject->{UserID};
+        # Customer user
+        $Module = $ConfigObject->Get('Customer::AuthModule');
+        return $Module if !$LayoutObject->{UserID};
 
-    my %User = $CustomerUserObject->CustomerUserDataGet(
-        User => $LayoutObject->{UserID},
-    );
-    return $Module if !%User || !$User{UserAuthBackend};
+        my %User = $CustomerUserObject->CustomerUserDataGet(
+            User => $LayoutObject->{UserID},
+        );
+        return $Module if !%User || !$User{UserAuthBackend};
 
-    $Module = $ConfigObject->Get( 'Customer::AuthModule' . $User{UserAuthBackend} ) || $Module;
-    return $Module;
+        $Module = $ConfigObject->Get( 'Customer::AuthModule' . $User{UserAuthBackend} ) || $Module;
+        return $Module;
+    }
 }
 
 =head2 _RedirectPasswordDialog()
@@ -476,6 +479,14 @@ sub _FrontendTypeGet {
     my $FrontendModules         = $ConfigObject->Get('Frontend::Module')         || {};
     my $CustomerFrontendModules = $ConfigObject->Get('CustomerFrontend::Module') || {};
     my $PublicFrontendModules   = $ConfigObject->Get('PublicFrontend::Module')   || {};
+
+    # AjaxAttachment module is used in agent and customer frontend.
+    # because of that we need to check the session source.
+    if ( $Self->{Action} eq 'AjaxAttachment' ) {
+        my $FrontendType = $Self->{SessionSource};
+        $FrontendType =~ s{(^.*?)Interface$}{$1};
+        return $FrontendType;
+    }
 
     return 'Agent'    if $FrontendModules->{ $Self->{Action} };
     return 'Customer' if $CustomerFrontendModules->{ $Self->{Action} };
