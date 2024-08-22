@@ -3,6 +3,8 @@ include:
     file: '/templates/gitlab/base.yml'
 
 stages:
+  - utils
   - deploy
+
 GitHub:
   extends: .deploy_github
