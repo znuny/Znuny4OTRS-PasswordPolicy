@@ -18,8 +18,6 @@ package Kernel::Output::HTML::Layout;    ## no critic
 use strict;
 use warnings;
 
-use Kernel::System::VariableCheck qw(:all);
-
 our @ObjectDependencies = (
 );
 
