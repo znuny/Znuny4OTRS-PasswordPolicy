@@ -2,8 +2,6 @@ include:
   - project: $INCLUDE_PROJECT
     file: '/templates/gitlab/base.yml'
 
-image: registry.znuny.com/znuny/internal/docker-znunylts-ci:test-stable
-
 stages:
   - utils
   - check
