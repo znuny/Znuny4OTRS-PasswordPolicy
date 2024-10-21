@@ -1,6 +1,6 @@
 # Functionality
 
-This extension is useful if strong password policies are needed, e. g. in CERT or financial environments.
+This add-on is useful if strong password policies are needed, e.g. in CERT or financial environments.
 
 ## Feature list
 
