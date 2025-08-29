@@ -480,9 +480,9 @@ sub _FrontendTypeGet {
     my $CustomerFrontendModules = $ConfigObject->Get('CustomerFrontend::Module') || {};
     my $PublicFrontendModules   = $ConfigObject->Get('PublicFrontend::Module')   || {};
 
-    # AjaxAttachment module is used in agent and customer frontend.
+    # AJAXAttachment module is used in agent and customer frontend.
     # because of that we need to check the session source.
-    if ( $Self->{Action} eq 'AjaxAttachment' ) {
+    if ( $Self->{Action} eq 'AJAXAttachment' ) {
         my $FrontendType = $Self->{SessionSource};
         $FrontendType =~ s{(^.*?)Interface$}{$1};
         return $FrontendType;
