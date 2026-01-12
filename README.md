@@ -1,6 +1,9 @@
-![Znuny logo](https://www.znuny.com/assets/images/logo_small.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://www.znuny.com/assets/znuny-logo.svg">
+  <img alt="Znuny" src="https://www.znuny.com/assets/znuny-logo-black.svg">
+</picture>
 
-![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-PasswordPolicy/rel-7_2)
+![Build status](https://badge.proxy.znuny.com/Znuny4OTRS-PasswordPolicy/rel-7_3)
 
 Znuny-PasswordPolicy
 ====================
@@ -20,7 +23,7 @@ This add-on is useful if strong password policies are needed, e.g. in CERT or fi
 
 **Prerequisites**
 
-- Znuny 7.2
+- Znuny 7.3
 
 **Installation**
 
