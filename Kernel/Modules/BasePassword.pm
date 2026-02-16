@@ -56,7 +56,7 @@ sub PreRun {
     my $Module = $Self->_AuthModuleGet();
 
     # return on no pw reset backends
-    return if $Module =~ /(LDAP|HTTPBasicAuth|Radius)/i;
+    return if $Module =~ /(LDAP|HTTPBasicAuth|Radius|SAML)/i;
 
     # redirect if password change time is in scope
     my $PasswordMaxValidTimeInDays = $Config->{Password}->{PasswordMaxValidTimeInDays} * 60 * 60 * 24;
@@ -100,7 +100,7 @@ sub Run {
     my $Module = $Self->_AuthModuleGet();
 
     # return on no pw reset backends
-    if ( $Module =~ /(LDAP|HTTPBasicAuth|Radius)/i ) {
+    if ( $Module =~ /(LDAP|HTTPBasicAuth|Radius|SAML)/i ) {
         return $Self->_Screen(
             Error => "No Password reset backend is used ($Module)! Can't set Password!"
         );
