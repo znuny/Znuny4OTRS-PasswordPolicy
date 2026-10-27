@@ -10,6 +10,7 @@
 # --
 
 ## nofilter(TidyAll::Plugin::Znuny::Perl::LayoutObject)
+package Kernel::Autoload::ZnunyPasswordPolicy;
 
 use Kernel::Output::HTML::Layout;
 

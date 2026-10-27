@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # Copyright (C) 2012 Znuny GmbH, https://znuny.com/
 # --
-# $origin: Znuny - 2acbc11790726af75000f3c382fd1a0860fbbc4b - Kernel/Output/HTML/Preferences/Password.pm
+# $origin: Znuny - 5cbe89220a782870797d5675708c370cc41d0c61 - Kernel/Output/HTML/Preferences/Password.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
@@ -212,7 +212,7 @@ sub Run {
     }
 
     # check min 2 char password
-    if ( $Config->{PasswordMin2Characters} && $Pw !~ /[A-z][A-z]/ ) {
+    if ( $Config->{PasswordMin2Characters} && $Pw !~ /[a-z].*[a-z]/i ) {
         $Self->{Error}
             = $LanguageObject->Translate('Can\'t update password, it must contain at least 2 letter characters!');
         return;
