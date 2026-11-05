@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report an bug in the manual
+    url: https://github.com/znuny/manual/issues
+    about: This is the issue tracker for our manual.
+  - name: Report incorrect or missing information on our website
+    url: https://www.znuny.com/contact
+    about: Please report issues with the website there.
+  - name: I need support
+    url: https://www.znuny.com/en/support
+    about: Check our website for resources on getting help.
+  - name: Feature Request
+    url: https://github.com/znuny/znuny-feature-requests
+    about: Please use this link to request new features or enhancements to existing features.
+  - name: I'm unsure where to go
+    url: https://discord.gg/kmfR8FCSk
+    about: If you are unsure where to go, then joining our chat is recommended; Just ask!

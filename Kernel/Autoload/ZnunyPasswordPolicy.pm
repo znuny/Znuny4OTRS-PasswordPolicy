@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2021 OTRS AG, https://otrs.com/
 # Copyright (C) 2012 Znuny GmbH, https://znuny.com/
 # --
-# $origin: znuny - 5fd93eb43f99a7b6884cfc94b99bd8e04d78bad7 - Kernel/Output/HTML/Layout.pm
+# $origin: znuny - 49f7f18a1cd14091d573f63f6d27b5881a9b6635 - Kernel/Output/HTML/Layout.pm
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (GPL). If you
@@ -10,6 +10,7 @@
 # --
 
 ## nofilter(TidyAll::Plugin::Znuny::Perl::LayoutObject)
+package Kernel::Autoload::ZnunyPasswordPolicy;
 
 use Kernel::Output::HTML::Layout;
 
@@ -17,6 +18,7 @@ package Kernel::Output::HTML::Layout;    ## no critic
 
 use strict;
 use warnings;
+use utf8;
 
 our @ObjectDependencies = (
 );
